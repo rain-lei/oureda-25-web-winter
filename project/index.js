@@ -20,11 +20,13 @@ const answerLength = 5;
 // 最多尝试次数
 const maxGuessTime = 6;
 
+
 // Wordle 中出现的三种颜色，更推荐使用枚举
 // 此处 green 用字母 b 表示，具体原因请参见代码任务
 const grey = "g";
 const yellow = "y";
-const green = "b";
+const green = "b";    
+
 
 // 颜色序列，类型为 string[]
 let colorSequence = [];
@@ -38,7 +40,7 @@ let guess = "";
 // 当前已经使用的猜测次数
 let currentGuessTime = 0;
 // 当前游标位置（1~30）
-let index = 1;
+let index = 1;  // 1~5 代表第一行，6~10 代表第二行，以此类推
 
 /**
  * 程序当前的状态，更推荐使用枚举
@@ -76,6 +78,8 @@ start();
  */
 function start() {
   // TODO
+  initialize();
+  console.log(calculateColorSequence("adapt", "apple"));
 }
 
 /**
@@ -107,6 +111,15 @@ function render(letter) {
  */
 function initialize() {
   // TODO
+state = "UNFINISHED";
+currentGuessTime = 0;
+guess = "";
+//answer = generateRandomAnswer();
+answer = "apple";
+index = 1;
+colorSequence = [];
+wordSequence = [];
+console.log("程序已初始化,answer is ", answer);
 }
 
 /**
@@ -165,12 +178,14 @@ function handleAnswer(guess) {
  *
  * 例如：
  * 给定 answer = "apple", guess = "angel"
- *
+ * 
  * 那么返回结果为："bggyy"
  *
  * 请思考：
  * 1. Wordle 的颜色匹配算法是如何实现的
+ * b代表正确位置的字母，g代表不在单词中的字母，y代表在单词中但位置不对的字母
  * 2. 有哪些特殊的匹配情况
+ * 注意点：如果 guess 中有重复的字母，而 answer 中只有一个这样的字母，那么只有 guess 中的第一个这样的字母会被标记为 y 或 b，其他的会被标记为 g
  *
  * @param {string} guess
  * @param {string} answer
@@ -178,4 +193,77 @@ function handleAnswer(guess) {
  */
 function calculateColorSequence(guess, answer) {
   // TODO
+  let result = ['g', 'g', 'g', 'g', 'g'];
+/*  for (let i = 0 ; i < answerLength ; i++) {
+    if (guess[i] === answer[i]) {
+      result[i] = 'b';
+      continue;
+    }
+    else for (let j = 0 ; j < answerLength ; j++) {
+      if (guess[i] === answer[j]) {
+        result[i] = 'y';
+        break;
+      }
+    }
+  }
+  */
+  let guessArr = guess.toUpperCase().split("");
+  let answerArr = answer.toUpperCase().split("");
+  for (let i = 0 ; i < answerLength ; i++) {
+    if (guessArr[i] === answerArr[i]) {
+      result[i] = 'b';
+      answerArr[i] = '';
+    }
+  }
+  for (let i = 0 ; i < answerLength ; i++) {
+    if (result[i] !== 'b')
+    {
+
+    
+            for (let j = 0 ; j < answerLength ; j++) {
+                         if (guessArr[i] === answerArr[j]) 
+                        {
+                         result[i] = 'y';
+                         answerArr[j] = '';
+                         break;
+                         }
+            }
+    }
 }
+
+  return result.join('');
+}
+
+/*  通过https://www.codewars.com/kata/62013b174c72240016600e60/train/javascript的代码
+*   更改了颜色的表示方式，b代表绿色，g代表灰色，y代表黄色
+function resolver(guess, answer) {
+  // TODO
+  let answerLength = 5;
+  let result = ['b', 'b', 'b', 'b', 'b'];
+  let guessArr = guess.toUpperCase().split("");
+  let answerArr = answer.toUpperCase().split("");
+  for (let i = 0 ; i < answerLength ; i++) {
+    if (guessArr[i] === answerArr[i]) {
+      result[i] = 'g';
+      answerArr[i] = '';
+    }
+  }
+  for (let i = 0 ; i < answerLength ; i++) {
+    if (result[i] !== 'g')
+    {
+
+    
+            for (let j = 0 ; j < answerLength ; j++) {
+                         if (guessArr[i] === answerArr[j]) 
+                        {
+                         result[i] = 'y';
+                         answerArr[j] = '';
+                         break;
+                         }
+            }
+    }
+}
+
+  return result.join('');
+}
+*/

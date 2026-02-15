@@ -1,1 +1,60 @@
 /* 请在此文件中给出你的 CSS 代码 */
+body {
+    font-family: Arial,Arial, Helvetica, sans-serif;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.808);
+    color: white;
+    margin: 0%;
+
+    
+}
+#game-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100vh;
+        width: 100%;
+        max-width: 500px;
+        margin: 0 auto;
+
+    }
+#board {
+    display: grid;
+    grid-template-rows: repeat(6, 1fr); /* 6行 */
+    grid-gap: 5px; /* 间距 */
+    padding: 10px;
+    box-sizing: border-box;
+    }
+
+.row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 5列 */
+    grid-gap: 5px;
+    }
+
+.tile {
+    width: 60px; /* 如果手机端显示有问题，这里可能需要改成百分比 */
+    height: 60px;
+    border: 2px solid #3a3a3c; /* 灰色边框 */
+    display: inline-flex;
+    justify-content: center; /* 水平居中 */
+    align-items: center;     /* 垂直居中 */
+    font-size: 2rem;         /* 大字体 */
+    font-weight: bold;
+    text-transform: uppercase; /* 强制大写 */
+    }
+    /* 正确 - 绿色 */
+.correct {
+    background-color: #538d4e;
+    border-color: #538d4e;
+    }
+    /* 存在但位置错 - 黄色 */
+.present {
+    background-color: #b59f3b;
+    border-color: #b59f3b;
+    }
+    /* 不存在 - 灰色 */
+.absent {
+    background-color: #3a3a3c;
+    border-color: #3a3a3c;
+    }

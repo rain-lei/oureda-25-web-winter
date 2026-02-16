@@ -18,6 +18,40 @@ body {
         margin: 0 auto;
 
     }
+/* 虚拟键盘容器 */
+/* === index.css 补充与修复 === */
+
+/* 1. 修复键盘太小的问题 */
+#keyboard-container {
+    width: 100%;
+    max-width: 500px; /* 它可以和棋盘一样宽 */
+    padding: 0 8px;   /* 左右留点缝隙 */
+    box-sizing: border-box; /* 确保 padding 不撑大容器 */
+}
+
+.key-btn {
+    /* 强制指定最小高度和字体 */
+    height: 58px !important; 
+    font-size: 1.2rem; /* 字体大一点 */
+    
+    flex: 1; /* 均分对齐 */
+    margin: 0 3px; /* 间距适中 */
+    
+    /* 解决 user-select 报错：加上浏览器前缀 */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+
+
+/* 键盘按键变色后也需要变白字 */
+button.correct, button.present, button.absent {
+    color: white !important;
+    border: none;
+}
+
 #board {
     display: grid;
     grid-template-rows: repeat(6, 1fr); /* 6行 */
@@ -58,3 +92,8 @@ body {
     background-color: #3a3a3c;
     border-color: #3a3a3c;
     }
+.keyboard-row {
+    display: flex;
+    justify-content: center;
+    margin: 0 auto 8px;
+}

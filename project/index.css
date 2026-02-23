@@ -19,9 +19,7 @@ body {
 
     }
 /* 虚拟键盘容器 */
-/* === index.css 补充与修复 === */
 
-/* 1. 修复键盘太小的问题 */
 #keyboard-container {
     width: 100%;
     max-width: 500px; /* 它可以和棋盘一样宽 */
@@ -37,7 +35,6 @@ body {
     flex: 1; /* 均分对齐 */
     margin: 0 3px; /* 间距适中 */
     
-    /* 解决 user-select 报错：加上浏览器前缀 */
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -96,4 +93,43 @@ button.correct, button.present, button.absent {
     display: flex;
     justify-content: center;
     margin: 0 auto 8px;
+}
+
+/* 控制按钮样式 */
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.control-btn {
+    background-color: #818384;
+    color: white;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.control-btn:hover {
+    background-color: #565758;
+}
+
+#restart-btn {
+    background-color: #538d4e; /* 绿色，类似 play/valid 动作 */
+}
+
+#restart-btn:hover {
+    background-color: #43703e;
+}
+
+#show-answer-btn {
+    background-color: #b59f3b; /* 黄色，类似 warning/hint 动作 */
+}
+
+#show-answer-btn:hover {
+    background-color: #927f2f;
 }

@@ -387,9 +387,63 @@ Bug 审查 ── 全面代码审计，发现并修复 6 个 Bug
 | 项目 | 说明 |
 |------|------|
 | `render()` 函数 | 目前为空壳，游戏逻辑直接操作 DOM（功能正常但不优雅） |
-| "再来一局"功能 | 游戏结束后需手动刷新页面 |
+| **"再来一局"功能** | 游戏结束后需手动刷新页面，建议添加重置按钮 |
+| **"显示答案"功能** | 调试或放弃时查看答案，建议添加按钮 |
 | 动画效果 | 翻转动画、弹跳动画等（可选） |
 | `readme.md` | 项目说明文档待编写 |
+
+---
+
+## Phase 7 — 进阶功能建议
+
+这部分是为后续开发提供的实现思路，帮助完善游戏体验。
+
+### 1. 实现"再来一局" (Reset Game)
+
+当前游戏结束后（无论输赢）只能通过 F5 刷新页面来重开。更好的做法是提供一个按钮，点击后重置所有状态。
+
+**实现思路**:
+1.  **HTML**: 在 `header` 或底部添加一个 `<button id="restart-btn">再来一局</button>`。
+2.  **JS**: 编写一个 `resetGame` 函数（或复用/修改 `initialize`）。
+3.  **重置逻辑**:
+    -   **变量重置**: `currentGuessTime = 0`, `guess = ""`, `state = "UNFINISHED"`.
+    -   **生成新答案**: 调用 `answer = await generateRandomAnswer()`.
+    -   **清空网格**: 遍历 `.tile`，清空 `textContent`，移除所有颜色类 (`correct`, `present`, `absent`).
+    -   **清空键盘**: 遍历 `.key-btn`，移除所有颜色类.
+    -   **更新提示**: 如果有状态显示栏，重置相应文字.
+
+### 2. 实现"显示答案" (Show Answer)
+
+在调试过程中或玩家实在猜不出来时，提供一种查看答案的方式。
+
+**实现思路**:
+1.  **HTML**: 添加一个 `<button id="show-answer-btn">显示答案</button>`。
+2.  **JS**: 绑定点击事件。
+3.  **逻辑**:
+    -   直接 `alert("当前的答案是: " + answer)`.
+    -   或者在页面某个隐蔽角落显示。
+    -   *(进阶)*: 点击后直接判负 (`state = "FAILED"`) 并结束本局游戏，避免作弊.
+
+### 3. 代码重构建议
+可以将 `initialize()` 中的 DOM 清理逻辑提取出来，这样 `resetGame()` 可以直接调用它，避免代码重复。
+
+```javascript
+/* 伪代码示例 */
+async function resetGame() {
+    // 1. 重置核心变量
+    currentGuessTime = 0;
+    guess = "";
+    state = "UNFINISHED";
+    
+    // 2. 重新获取答案
+    answer = await generateRandomAnswer();
+    
+    // 3. 清理 UI (网格和键盘)
+    // ...清除 class 和 textContent...
+    
+    console.log("游戏已重置，新答案:", answer);
+}
+```
 
 ---
 

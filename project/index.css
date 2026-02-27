@@ -64,7 +64,7 @@ button.correct, button.present, button.absent {
     }
 
 .tile {
-    width: 60px; /* 如果手机端显示有问题，这里可能需要改成百分比 */
+    width: 60px; 
     height: 60px;
     border: 2px solid #3a3a3c; /* 灰色边框 */
     display: inline-flex;
@@ -72,7 +72,7 @@ button.correct, button.present, button.absent {
     align-items: center;     /* 垂直居中 */
     font-size: 2rem;         /* 大字体 */
     font-weight: bold;
-    text-transform: uppercase; /* 强制大写 */
+    /*text-transform: uppercase; /* 强制大写 */
     }
     /* 正确 - 绿色 */
 .correct {

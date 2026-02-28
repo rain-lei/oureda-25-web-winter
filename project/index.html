@@ -4,8 +4,106 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wordle</title>
+    <link rel="stylesheet" href="index.css">
 </head>
 <body>
     <!-- 请在此文件中给出你的 html 代码并引入同目录下的 css 和 js 文件来实现样式和逻辑功能 -->
+    <div class="game-container">
+        <h1>Wordle</h1>
+
+        <div class="grid">
+            <div class="row" id = "row1">
+                <div class="cell" id = "cell1"></div>
+                <div class="cell" id = "cell2"></div>
+                <div class="cell" id = "cell3"></div>
+                <div class="cell" id = "cell4"></div>
+                <div class="cell" id = "cell5"></div>
+            </div>
+            <div class="row" id = "row2">
+                <div class="cell" id = "cell6"></div>
+                <div class="cell" id = "cell7"></div>
+                <div class="cell" id = "cell8"></div>
+                <div class="cell" id = "cell9"></div>
+                <div class="cell" id = "cell10"></div>
+            </div>
+            <div class="row" id = "row3">
+                <div class="cell" id = "cell11"></div>
+                <div class="cell" id = "cell12"></div>
+                <div class="cell" id = "cell13"></div>
+                <div class="cell" id = "cell14"></div>
+                <div class="cell" id = "cell15"></div>
+            </div>
+            <div class="row" id = "row4">
+                <div class="cell" id = "cell16"></div>
+                <div class="cell" id = "cell17"></div>
+                <div class="cell" id = "cell18"></div>
+                <div class="cell" id = "cell19"></div>
+                <div class="cell" id = "cell20"></div>
+            </div>
+            <div class="row" id = "row5">   
+                <div class="cell" id = "cell21"></div>
+                <div class="cell" id = "cell22"></div>
+                <div class="cell" id = "cell23"></div>
+                <div class="cell" id = "cell24"></div>
+                <div class="cell" id = "cell25"></div>  
+            </div>
+            <div class="row" id="row6">
+                <div class="cell" id = "cell26"></div>
+                <div class="cell" id = "cell27"></div>
+                <div class="cell" id = "cell28"></div>
+                <div class="cell" id = "cell29"></div>
+                <div class="cell" id = "cell30"></div>
+            </div>
+        </div>
+
+        <div class="answer">
+            <button id="showAnswer">答案显示</button>
+        </div>
+
+        <div class="refresh">
+            <button id="refresh">刷新</button>
+        </div>
+
+        <div class="keyboard">
+            <div class="keyboard-row1">
+                <button class="key" id="keyQ">Q</button>
+                <button class="key" id="keyW">W</button>
+                <button class="key" id="keyE">E</button>
+                <button class="key" id="keyR">R</button>
+                <button class="key" id="keyT">T</button>
+                <button class="key" id="keyY">Y</button>
+                <button class="key" id="keyU">U</button>
+                <button class="key" id="keyI">I</button>
+                <button class="key" id="keyO">O</button>
+                <button class="key" id="keyP">P</button>
+            </div>
+            <div class="keyboard-row2">
+                <button class="key" id="keyA">A</button>
+                <button class="key" id="keyS">S</button>
+                <button class="key" id="keyD">D</button>
+                <button class="key" id="keyF">F</button>
+                <button class="key" id="keyG">G</button>
+                <button class="key" id="keyH">H</button>
+                <button class="key" id="keyJ">J</button>
+                <button class="key" id="keyK">K</button>
+                <button class="key" id="keyL">L</button>
+            </div>
+            <div class="keyboard-row3">
+                <button class="longkey" id="keyEnter">Enter</button>
+                <button class="key" id="keyZ">Z</button>
+                <button class="key" id="keyX">X</button>
+                <button class="key" id="keyC">C</button>
+                <button class="key" id="keyV">V</button>
+                <button class="key" id="keyB">B</button>
+                <button class="key" id="keyN">N</button>
+                <button class="key" id="keyM">M</button>
+                <button class="longkey" id="keyBackspace">Backspace</button>
+            </div>
+        </div>
+
+
+    </div>
+
+    <script src="index.js"></script>
 </body>
 </html>

@@ -1,1 +1,72 @@
 /* 请在此文件中给出你的 CSS 代码 */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #252525;
+    color: white;
+    display: flex;/* 使用 Flexbox 布局*/
+    justify-content: center;/* 水平居中+*/
+    align-items: center;/* 垂直居中 */
+    min-height: 100vh;/* 使 body 占满整个视口高度 */
+    margin: 0;/* 去除默认的 margin */
+}
+h1 {
+    margin-bottom: 20px;/* 标题下方的间距 */
+    font-size: 50px;/* 标题字体大小 */
+}
+.grid {
+    display: inline-block;/* 使 grid 元素成为一个行内块元素 */
+    margin: 20px auto;/* 上下外边距为 20px，左右自动 */
+}
+/* 行样式 */
+.row {
+    display: flex;/* 使用 Flexbox 布局 */
+    justify-content: center;/* 水平居中 */
+    margin-bottom: 8px;/* 行之间的间距 */
+}
+/* 单元格样式 */
+.cell {
+    width: 60px;/* 单元格宽度 */
+    height: 60px;/* 单元格高度 */
+    border: 2px solid #555;/* 单元格边框 */
+    margin: 0 4px;/* 单元格之间的水平间距 */
+    display: flex;/* 使用 Flexbox 布局 */
+    justify-content: center;/* 水平居中 */
+    align-items: center;/* 垂直居中 */
+    font-size: 24px;/* 字体大小 */
+    font-weight: bold;/* 字体加粗 */
+    text-transform: uppercase;/* 字母大写 */
+}
+.cell.filled {
+    border-color: burlywood;/* 填充单元格的边框颜色 */
+    color: white;/* 填充单元格的文字颜色 */
+}
+/* 正确位置的单元格样式 */
+.cell.correct {
+    background-color: #6aaa64;/* 绿色背景 */
+    border-color: #6aaa64;/* 绿色边框 */
+    color: white;/* 白色文字 */
+}
+/* 错误位置但存在的单元格样式 */
+.cell.present {
+    background-color: #c9b458;/* 黄色背景 */
+    border-color: #c9b458;/* 黄色边框 */
+    color: white;/* 白色文字 */
+}
+/* 不存在的单元格样式 */
+.cell.absent {
+    background-color: #787c7e;/* 灰色背景 */
+    border-color: #787c7e;/* 灰色边框 */
+    color: white;/* 白色文字 */
+}
+.key.correct{
+    background-color: #6aaa64;/* 绿色背景 */
+    color: white;/* 白色文字 */
+}
+.key.present{
+    background-color: #c9b458;/* 黄色背景 */
+    color: white;/* 白色文字 */ 
+}
+.key.absent{
+    background-color: #787c7e;/* 灰色背景 */
+    color: white;/* 白色文字 */
+}

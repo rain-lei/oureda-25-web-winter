@@ -76,7 +76,100 @@ start();
  */
 function start() {
   // TODO
+  initialize();
+//实体监听
+document.addEventListener("keydown", function(event) {
+  if (state !== "UNFINISHED") {
+    return;
+  }
+  const key = event.key.toUpperCase();
+  if (/^[A-Z]$/.test(key)) {
+    if (index < currentGuessTime * answerLength + answerLength + 1) {
+      guess += key;
+      render(key);
+    }
+  }
+  else if (event.key === "Enter") {
+  const expectedIndex = currentGuessTime * answerLength + answerLength + 1;
+  if (index === expectedIndex) {  
+    const submitSuccess = handleAnswer(guess);
+    if (submitSuccess) {
+      guess = "";
+    }
+  } else {
+    alert("Please fill in all the cells in the current row before submitting!");
+
+  }
+  }
+  else if (event.key === "Backspace") {
+    if (index > currentGuessTime * answerLength + 1) {
+      index--;
+      const cell = document.getElementById(`cell${index}`);
+      cell.textContent = "";
+      cell.className = "cell";
+      guess = guess.slice(0, -1);
+    }
+  }
+
+});
+
+document.querySelectorAll(".key, .longkey").forEach(key => {
+  key.addEventListener("click", function() {
+    if (state !== "UNFINISHED") {
+      return;
+    }
+    const keyBtn = this.textContent.toUpperCase();
+      if (/^[A-Z]$/.test(keyBtn)) {
+    const expectedIndex = currentGuessTime * answerLength + answerLength + 1;
+if (index < expectedIndex)  {
+      guess += keyBtn;
+      render(keyBtn);
+    }
+  }
+  else if (keyBtn === "ENTER") {
+    const expectedIndex = currentGuessTime * answerLength + answerLength + 1;
+    if (index === expectedIndex && guess.length === answerLength) {
+      const submitSuccess = handleAnswer(guess);
+      if (submitSuccess) {
+        guess = "";
+      }
+    }
+    else {
+      alert("补全单词后再提交哦！");
+    }
+  }
+  else if (keyBtn === "BACKSPACE") {
+    if (index > currentGuessTime * answerLength + 1) {
+      index--;
+      const cell = document.getElementById(`cell${index}`);
+      if (cell) {
+      cell.textContent = "";
+      cell.className = "cell";
+      guess = guess.slice(0, -1);
+      }
+    }
+  }
+
+ });
+});
+
+
+
+
+document.getElementById("refresh").addEventListener("click", function() {
+  initialize();
+  refresh.blur();
+});
+document.getElementById("showAnswer").addEventListener("click", function() {
+  alert(`答案是: ${answer.toLowerCase()}`);
+  showAnswer.blur();
+});
+
+
+
+
 }
+
 
 /**
  * render()
@@ -94,6 +187,19 @@ function start() {
  */
 function render(letter) {
   // TODO
+  if (index > currentGuessTime * answerLength + answerLength) {
+    return;
+  }
+  if (state !== "UNFINISHED") {
+      return;
+    }
+  const currentRowStart = currentGuessTime * answerLength + 1;
+
+    const cell = document.getElementById(`cell${index}`);
+    cell.textContent = letter;
+    cell.className = "cell filled";
+    index++;
+
 }
 
 /**
@@ -107,6 +213,37 @@ function render(letter) {
  */
 function initialize() {
   // TODO
+  state = "UNFINISHED";
+  currentGuessTime = 0;
+  index = 1;
+  colorSequence = [];
+  wordSequence = [];
+// 清空grid
+  for (let i=1; i <= maxGuessTime*answerLength; i++) {
+    const cell = document.getElementById(`cell${i}`);
+    cell.textContent = "";
+    cell.className = "cell";//此时为original
+
+  }
+// 清空键盘
+  const keys = document.querySelectorAll(".key, .longkey");
+  keys.forEach(key => {
+    key.className = key.classList.contains("longkey") ? "longkey" : "key";//此时为original
+  });
+
+// 生成新的答案
+  answer = "APPLE";
+  wordSequence = [answer];
+  generateRandomAnswer().then(randomWord => {
+    answer = randomWord.toUpperCase();
+  });
+  
+
+// 弹窗提示游戏开始
+
+  
+
+
 }
 
 /**
@@ -124,7 +261,30 @@ function initialize() {
  */
 async function generateRandomAnswer() {
   // TODO
-}
+   try {
+      // 读取 words.json 文件
+      const response = await fetch('words.json');//使用 fetch API 发起网络请求获取 words.json 文件的内容，fetch 返回一个 Promise，使用 await 等待这个 Promise 解析完成，得到一个 Response 对象
+      
+
+      const data = await response.json();//
+
+      // 根据 words.json 的结构 {"words": [...]} 获取单词列表
+      // 统一转为大写，方便后续比较
+      wordSequence = data.words.map(w => w.toUpperCase());
+
+      // 随机抽取一个单词
+      const randomIndex = Math.floor(Math.random() * wordSequence.length);
+      const randomWord = wordSequence[randomIndex];
+
+      return randomWord;
+
+    } catch (error) {
+      console.error("无法读取词库:", error);
+      alert("词库加载失败，已启用基础模式（5位英文字母均可提交）。");
+      return "APPLE"; // 发生错误时的保底词（大写）
+    }
+  }
+
 
 /**
  * isValidWord()
@@ -142,6 +302,18 @@ async function generateRandomAnswer() {
  */
 function isValidWord(word) {
   // TODO
+  const normalizedWord = word.toUpperCase();
+  const basicFormatValid = /^[A-Z]{5}$/.test(normalizedWord);
+
+  if (!basicFormatValid) {
+    return false;
+  }
+
+  if (wordSequence.length <= 1) {
+    return true;
+  }
+
+  return wordSequence.includes(normalizedWord);
 }
 
 /**
@@ -156,6 +328,60 @@ function isValidWord(word) {
  */
 function handleAnswer(guess) {
   // TODO
+  guess = guess.toUpperCase();
+  if (!isValidWord(guess)) {
+    alert("Invalid word!");
+    return false;
+  }
+
+const colorSeq = calculateColorSequence(guess, answer);
+
+
+for (let i = index - answerLength; i < index; i++) {
+  const letterIndex = i - (index - answerLength);
+  const letter = guess[letterIndex].toUpperCase();
+  const key = document.getElementById(`key${letter}`);
+  const cell = document.getElementById(`cell${i}`);
+  const shortcolor = colorSeq[letterIndex];
+  if (shortcolor === 'b') {
+    cell.className = "cell correct";
+    key.className = "key correct";
+  }
+  else if (shortcolor === 'y') {
+    cell.className = "cell present";
+    if (key.className !== "key correct") {
+      key.className = "key present";
+    }
+  }
+  else {
+    cell.className = "cell absent";
+    if (key.className !== "key correct" && key.className !== "key present") {
+      key.className = "key absent";
+    }
+  }
+}
+
+
+
+
+  if (guess === answer) {
+    state = "SOLVED";
+    alert("恭喜你猜对了！");
+  }
+  else {
+    currentGuessTime++;
+    if (currentGuessTime >= maxGuessTime) {
+      state = "FAILED";
+      alert(`游戏结束，正确答案是: ${answer.toUpperCase()}`);
+    }
+    else {
+      index = currentGuessTime * answerLength + 1;
+      //alert(`Wrong guess! You have ${maxGuessTime - currentGuessTime} guesses left.`);
+
+    }
+  }
+
+  return true;
 }
 
 /**
@@ -177,5 +403,41 @@ function handleAnswer(guess) {
  * @return {string} colorSequence
  */
 function calculateColorSequence(guess, answer) {
-  // TODO
-}
+      let result = ['g', 'g', 'g', 'g', 'g'];
+    /*  for (let i = 0 ; i < answerLength ; i++) {
+        if (guess[i] === answer[i]) {
+          result[i] = 'b';
+          continue;
+        }
+        else for (let j = 0 ; j < answerLength ; j++) {
+          if (guess[i] === answer[j]) {
+            result[i] = 'y';
+            break;
+          }
+        }
+      }
+      */
+    let guessArr = guess.toUpperCase().split("");
+    let answerArr = answer.toUpperCase().split("");
+    for (let i = 0; i < answerLength; i++) {
+      if (guessArr[i] === answerArr[i]) {
+        result[i] = 'b';
+        answerArr[i] = '';
+      }
+    }
+    for (let i = 0; i < answerLength; i++) {
+      if (result[i] !== 'b') {
+
+
+        for (let j = 0; j < answerLength; j++) {
+          if (guessArr[i] === answerArr[j]) {
+            result[i] = 'y';
+            answerArr[j] = '';
+            break;
+          }
+        }
+      }
+    }
+
+    return result.join('');
+  }

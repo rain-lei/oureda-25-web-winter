@@ -10,7 +10,7 @@
     <!-- 请在此文件中给出你的 html 代码并引入同目录下的 css 和 js 文件来实现样式和逻辑功能 -->
     <div class="game-container">
         <h1>Wordle</h1>
-
+        <h3 id = "leftGuessTime">Left GuessTime: 6</h3>
         <div class="grid">
             <div class="row" id = "row1">
                 <div class="cell" id = "cell1"></div>
@@ -55,13 +55,9 @@
                 <div class="cell" id = "cell30"></div>
             </div>
         </div>
-
-        <div class="answer">
-            <button id="showAnswer">答案显示</button>
-        </div>
-
-        <div class="refresh">
-            <button id="refresh">刷新</button>
+        <div>
+            <button  class="setting" id="showAnswer">答案显示</button>
+            <button  class="setting" id="refresh">刷新</button>
         </div>
 
         <div class="keyboard">

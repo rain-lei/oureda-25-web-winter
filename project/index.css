@@ -1,21 +1,36 @@
 /* 请在此文件中给出你的 CSS 代码 */
+.game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
 body {
+    display: flex;
+    flex-direction: column;
     font-family: Arial, sans-serif;
     background-color: #252525;
     color: white;
-    display: flex;/* 使用 Flexbox 布局*/
-    justify-content: center;/* 水平居中+*/
-    align-items: center;/* 垂直居中 */
-    min-height: 100vh;/* 使 body 占满整个视口高度 */
-    margin: 0;/* 去除默认的 margin */
+    margin: 0;
 }
 h1 {
-    margin-bottom: 20px;/* 标题下方的间距 */
+    margin-bottom: 0px;/* 标题下方的间距 */
     font-size: 50px;/* 标题字体大小 */
+    text-align: center;/* 文本居中 */
+}
+#leftGuessTime{
+    margin-top: 5px;/* 标题上方的间距 */
+    margin-bottom: 10px;/* 标题下方的间距 */
+    font-size: 20px;/* 标题字体大小 */
+    text-align: center;/* 文本居中 */
+    border-radius: 5px;/* 圆角 */
+    background-color: #555555ac;/* 背景颜色 */
+    padding: 10px;/* 内边距 */
 }
 .grid {
-    display: inline-block;/* 使 grid 元素成为一个行内块元素 */
-    margin: 20px auto;/* 上下外边距为 20px，左右自动 */
+    display: inline-block;
 }
 /* 行样式 */
 .row {
@@ -58,15 +73,108 @@ h1 {
     border-color: #787c7e;/* 灰色边框 */
     color: white;/* 白色文字 */
 }
+.keyboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.keyboard-row1,
+.keyboard-row2,
+.keyboard-row3 {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 8px;
+}
+
+.longkey {
+    width: 90px;
+    height: 45px;
+    margin: 0 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    background-color: #555555ac;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.longkey:hover {
+    background-color: #777777ac;/* 键盘按键悬停时的背景颜色 */
+}
+
+.key {
+    width: 35px;
+    height: 45px;
+    margin: 0 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    background-color: #555555ac;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+
+}
+.key:hover {
+    background-color: #777777ac;/* 键盘按键悬停时的背景颜色 */
+}
 .key.correct{
+
     background-color: #6aaa64;/* 绿色背景 */
     color: white;/* 白色文字 */
+}
+.key.correct:hover {
+    background-color: #5a9954;/* 键盘按键悬停时的背景颜色 */
 }
 .key.present{
     background-color: #c9b458;/* 黄色背景 */
     color: white;/* 白色文字 */ 
 }
+.key.present:hover {
+    background-color: #b8a74d;/* 键盘按键悬停时的背景颜色 */
+}
 .key.absent{
-    background-color: #787c7e;/* 灰色背景 */
+    background-color: rgba(128, 128, 128, 0);/* 灰色背景 */
     color: white;/* 白色文字 */
+}
+.key.absent:hover {
+    background-color: rgba(128, 128, 128, 0);/* 键盘按键悬停时的背景颜色 */
+}
+.setting{
+    width: 120px;/* 设置按钮宽度 */
+    height: 40px;/* 设置按钮高度 */
+    margin: 5px;/* 设置按钮之间的间距 */
+    display: inline-flex;/* 使用 Flexbox 布局 */
+    justify-content: center;/* 水平居中 */
+    align-items: center;/* 垂直居中 */
+    font-size: 14px;/* 设置按钮字体大小 */
+    font-weight: bold;/* 设置按钮字体加粗 */
+    text-transform: uppercase;/* 设置按钮字母大写 */
+    border: none;/* 去除设置按钮边框 */
+    border-radius: 5px;/* 设置按钮圆角 */
+    cursor: pointer;/* 鼠标悬停时显示为指针 */
+}
+#showAnswer {
+    background-color: #6aaa64;/* 按钮背景颜色 */
+    color: white;/* 按钮文字颜色 */
+}
+#showAnswer:hover {
+    background-color: #5a9954;/* 按钮悬停时的背景颜色 */
+}
+#refresh {
+    background-color: #c9b458;/* 按钮背景颜色 */
+    color: white;/* 按钮文字颜色 */
+}
+#refresh:hover {
+    background-color: #b8a74d;/* 按钮悬停时的背景颜色 */
 }

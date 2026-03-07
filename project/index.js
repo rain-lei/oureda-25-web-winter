@@ -362,17 +362,20 @@ for (let i = index - answerLength; i < index; i++) {
 }
 
 
-
-
   if (guess === answer) {
     state = "SOLVED";
-    alert("恭喜你猜对了！");
+    setTimeout(() => {
+      alert("恭喜你猜对了！");
+    }, 300);
   }
   else {
     currentGuessTime++;
+    document.getElementById("leftGuessTime").textContent = `Left GuessTime: ${maxGuessTime - currentGuessTime}`;
     if (currentGuessTime >= maxGuessTime) {
       state = "FAILED";
+      setTimeout(() => {                                                                                                                                 
       alert(`游戏结束，正确答案是: ${answer.toUpperCase()}`);
+      }, 300);
     }
     else {
       index = currentGuessTime * answerLength + 1;

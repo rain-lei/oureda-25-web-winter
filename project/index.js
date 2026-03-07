@@ -237,7 +237,7 @@ function initialize() {
   generateRandomAnswer().then(randomWord => {
     answer = randomWord.toUpperCase();
   });
-  
+  document.getElementById("leftGuessTime").textContent = `Left GuessTime: ${maxGuessTime - currentGuessTime}`;
 
 // 弹窗提示游戏开始
 

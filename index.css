@@ -1,99 +1,180 @@
 /* 请在此文件中给出你的 CSS 代码 */
+.game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
 body {
-    font-family: Arial,Arial, Helvetica, sans-serif;
-    text-align: center;
-    background-color: rgba(0, 0, 0, 0.808);
+    display: flex;
+    flex-direction: column;
+    font-family: Arial, sans-serif;
+    background-color: #252525;
     color: white;
-    margin: 0%;
-
-    
+    margin: 0;
 }
-#game-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        height: 100vh;
-        width: 100%;
-        max-width: 500px;
-        margin: 0 auto;
-
-    }
-/* 虚拟键盘容器 */
-/* === index.css 补充与修复 === */
-
-/* 1. 修复键盘太小的问题 */
-#keyboard-container {
-    width: 100%;
-    max-width: 500px; /* 它可以和棋盘一样宽 */
-    padding: 0 8px;   /* 左右留点缝隙 */
-    box-sizing: border-box; /* 确保 padding 不撑大容器 */
+h1 {
+    margin-bottom: 0px;/* 标题下方的间距 */
+    font-size: 50px;/* 标题字体大小 */
+    text-align: center;/* 文本居中 */
 }
-
-.key-btn {
-    /* 强制指定最小高度和字体 */
-    height: 58px !important; 
-    font-size: 1.2rem; /* 字体大一点 */
-    
-    flex: 1; /* 均分对齐 */
-    margin: 0 3px; /* 间距适中 */
-    
-    /* 解决 user-select 报错：加上浏览器前缀 */
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+#leftGuessTime{
+    margin-top: 5px;/* 标题上方的间距 */
+    margin-bottom: 10px;/* 标题下方的间距 */
+    font-size: 20px;/* 标题字体大小 */
+    text-align: center;/* 文本居中 */
+    border-radius: 5px;/* 圆角 */
+    background-color: #555555ac;/* 背景颜色 */
+    padding: 10px;/* 内边距 */
 }
-
-
-
-/* 键盘按键变色后也需要变白字 */
-button.correct, button.present, button.absent {
-    color: white !important;
-    border: none;
+.grid {
+    display: inline-block;
 }
-
-#board {
-    display: grid;
-    grid-template-rows: repeat(6, 1fr); /* 6行 */
-    grid-gap: 5px; /* 间距 */
-    padding: 10px;
-    box-sizing: border-box;
-    }
-
+/* 行样式 */
 .row {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr); /* 5列 */
-    grid-gap: 5px;
-    }
+    display: flex;/* 使用 Flexbox 布局 */
+    justify-content: center;/* 水平居中 */
+    margin-bottom: 8px;/* 行之间的间距 */
+}
+/* 单元格样式 */
+.cell {
+    width: 60px;/* 单元格宽度 */
+    height: 60px;/* 单元格高度 */
+    border: 2px solid #555;/* 单元格边框 */
+    margin: 0 4px;/* 单元格之间的水平间距 */
+    display: flex;/* 使用 Flexbox 布局 */
+    justify-content: center;/* 水平居中 */
+    align-items: center;/* 垂直居中 */
+    font-size: 24px;/* 字体大小 */
+    font-weight: bold;/* 字体加粗 */
+    text-transform: uppercase;/* 字母大写 */
+}
+.cell.filled {
+    border-color: burlywood;/* 填充单元格的边框颜色 */
+    color: white;/* 填充单元格的文字颜色 */
+}
+/* 正确位置的单元格样式 */
+.cell.correct {
+    background-color: #6aaa64;/* 绿色背景 */
+    border-color: #6aaa64;/* 绿色边框 */
+    color: white;/* 白色文字 */
+}
+/* 错误位置但存在的单元格样式 */
+.cell.present {
+    background-color: #c9b458;/* 黄色背景 */
+    border-color: #c9b458;/* 黄色边框 */
+    color: white;/* 白色文字 */
+}
+/* 不存在的单元格样式 */
+.cell.absent {
+    background-color: #787c7e;/* 灰色背景 */
+    border-color: #787c7e;/* 灰色边框 */
+    color: white;/* 白色文字 */
+}
+.keyboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
 
-.tile {
-    width: 60px; /* 如果手机端显示有问题，这里可能需要改成百分比 */
-    height: 60px;
-    border: 2px solid #3a3a3c; /* 灰色边框 */
-    display: inline-flex;
-    justify-content: center; /* 水平居中 */
-    align-items: center;     /* 垂直居中 */
-    font-size: 2rem;         /* 大字体 */
-    font-weight: bold;
-    text-transform: uppercase; /* 强制大写 */
-    }
-    /* 正确 - 绿色 */
-.correct {
-    background-color: #538d4e;
-    border-color: #538d4e;
-    }
-    /* 存在但位置错 - 黄色 */
-.present {
-    background-color: #b59f3b;
-    border-color: #b59f3b;
-    }
-    /* 不存在 - 灰色 */
-.absent {
-    background-color: #3a3a3c;
-    border-color: #3a3a3c;
-    }
-.keyboard-row {
+.keyboard-row1,
+.keyboard-row2,
+.keyboard-row3 {
     display: flex;
     justify-content: center;
-    margin: 0 auto 8px;
+    margin-bottom: 8px;
+}
+
+.longkey {
+    width: 90px;
+    height: 45px;
+    margin: 0 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    background-color: #555555ac;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.longkey:hover {
+    background-color: #777777ac;/* 键盘按键悬停时的背景颜色 */
+}
+
+.key {
+    width: 35px;
+    height: 45px;
+    margin: 0 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    background-color: #555555ac;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+
+}
+.key:hover {
+    background-color: #777777ac;/* 键盘按键悬停时的背景颜色 */
+}
+.key.correct{
+
+    background-color: #6aaa64;/* 绿色背景 */
+    color: white;/* 白色文字 */
+}
+.key.correct:hover {
+    background-color: #5a9954;/* 键盘按键悬停时的背景颜色 */
+}
+.key.present{
+    background-color: #c9b458;/* 黄色背景 */
+    color: white;/* 白色文字 */ 
+}
+.key.present:hover {
+    background-color: #b8a74d;/* 键盘按键悬停时的背景颜色 */
+}
+.key.absent{
+    background-color: rgba(128, 128, 128, 0);/* 灰色背景 */
+    color: white;/* 白色文字 */
+}
+.key.absent:hover {
+    background-color: rgba(128, 128, 128, 0);/* 键盘按键悬停时的背景颜色 */
+}
+.setting{
+    width: 120px;/* 设置按钮宽度 */
+    height: 40px;/* 设置按钮高度 */
+    margin: 5px;/* 设置按钮之间的间距 */
+    display: inline-flex;/* 使用 Flexbox 布局 */
+    justify-content: center;/* 水平居中 */
+    align-items: center;/* 垂直居中 */
+    font-size: 14px;/* 设置按钮字体大小 */
+    font-weight: bold;/* 设置按钮字体加粗 */
+    text-transform: uppercase;/* 设置按钮字母大写 */
+    border: none;/* 去除设置按钮边框 */
+    border-radius: 5px;/* 设置按钮圆角 */
+    cursor: pointer;/* 鼠标悬停时显示为指针 */
+}
+#showAnswer {
+    background-color: #6aaa64;/* 按钮背景颜色 */
+    color: white;/* 按钮文字颜色 */
+}
+#showAnswer:hover {
+    background-color: #5a9954;/* 按钮悬停时的背景颜色 */
+}
+#refresh {
+    background-color: #c9b458;/* 按钮背景颜色 */
+    color: white;/* 按钮文字颜色 */
+}
+#refresh:hover {
+    background-color: #b8a74d;/* 按钮悬停时的背景颜色 */
 }

@@ -20,13 +20,11 @@ const answerLength = 5;
 // 最多尝试次数
 const maxGuessTime = 6;
 
-
 // Wordle 中出现的三种颜色，更推荐使用枚举
 // 此处 green 用字母 b 表示，具体原因请参见代码任务
 const grey = "g";
 const yellow = "y";
-const green = "b";    
-
+const green = "b";
 
 // 颜色序列，类型为 string[]
 let colorSequence = [];
@@ -40,7 +38,7 @@ let guess = "";
 // 当前已经使用的猜测次数
 let currentGuessTime = 0;
 // 当前游标位置（1~30）
-let index = 1;  // 1~5 代表第一行，6~10 代表第二行，以此类推
+let index = 1;
 
 /**
  * 程序当前的状态，更推荐使用枚举
@@ -76,134 +74,101 @@ start();
  * 5. 如何读取交互信息
  * 6. 程序在什么时候会终止
  */
-async function start() 
-{
-  /*
+function start() {
   // TODO
-  await initialize();
-  document.addEventListener('keydown', function(event) 
-  {
-    if (state === "UNFINISHED") 
-    {
-      const key = event.key;    //key 是一个字符串，代表按下的键
-      //
-      if (key === "Enter") 
-    {
-        //if (guess.length === 5 && isValidWord(guess)) {//如果按下回车键，并且 guess 是一个合法的单词
-          handleAnswer(guess);
-          
-          render();//根据新的状态重新渲染页面
-        }
-        else{
-          alert("请输入一个合法的五字单词！");
-        }
+  initialize();
+//实体监听
+document.addEventListener("keydown", function(event) {
+  if (state !== "UNFINISHED") {
+    return;
+  }
+  const key = event.key.toUpperCase();
+  if (/^[A-Z]$/.test(key)) {
+    if (index < currentGuessTime * answerLength + answerLength + 1) {
+      guess += key;
+      render(key);
     }
-      else if (key === "Backspace") 
-    { 
-        if (guess.length > 0) {
-          guess = guess.slice(0, -1);
-          index--;
-          render();
-          const tiles = document.querySelectorAll('.tile');
-          if(tiles[index-1]) {
-            tiles[index-1].textContent = '';
-          }
-        }
+  }
+  else if (event.key === "Enter") {
+  const expectedIndex = currentGuessTime * answerLength + answerLength + 1;
+  if (index === expectedIndex) {  
+    const submitSuccess = handleAnswer(guess);
+    if (submitSuccess) {
+      guess = "";
     }
-      else if (/^[a-zA-Z]$/.test(key)) 
-      {
-        if (guess.length < 5) 
-        {
-          const tiles = document.querySelectorAll('.tile');
-          if(tiles[index-1]) {
-            tiles[index-1].textContent = key.toUpperCase();
-          }
-          guess += key.toLowerCase();
-          index++;
-          render();
-        }
+  } else {
+    alert("Please fill in all the cells in the current row before submitting!");
+
+  }
+  }
+  else if (event.key === "Backspace") {
+    if (index > currentGuessTime * answerLength + 1) {
+      index--;
+      const cell = document.getElementById(`cell${index}`);
+      cell.textContent = "";
+      cell.className = "cell";
+      guess = guess.slice(0, -1);
+    }
+  }
+
+});
+
+document.querySelectorAll(".key, .longkey").forEach(key => {
+  key.addEventListener("click", function() {
+    if (state !== "UNFINISHED") {
+      return;
+    }
+    const keyBtn = this.textContent.toUpperCase();
+      if (/^[A-Z]$/.test(keyBtn)) {
+    const expectedIndex = currentGuessTime * answerLength + answerLength + 1;
+if (index < expectedIndex)  {
+      guess += keyBtn;
+      render(keyBtn);
+    }
+  }
+  else if (keyBtn === "ENTER") {
+    const expectedIndex = currentGuessTime * answerLength + answerLength + 1;
+    if (index === expectedIndex && guess.length === answerLength) {
+      const submitSuccess = handleAnswer(guess);
+      if (submitSuccess) {
+        guess = "";
       }
-    });
-*/
-      await initialize();
-
-    // === 定义内部处理函数 (闭包)，替代全局函数 ===
-    // 这样既不污染全局作用域，又能处理所有输入
-    const processInput = (key) => {
-        if (state !== "UNFINISHED") return; // 游戏结束则不响应
-
-        // 统一转换为小写进行逻辑判断
-        const lowerKey = key.toLowerCase();
-
-        // 1. 处理回车 (Enter)
-        if (lowerKey === 'enter') {
-            if (guess.length === 5) {
-    if (isValidWord(guess)) {
-        handleAnswer(guess);
-    } else {
-        alert("不是一个合法的单词！");
     }
-}
-            else {
-                alert("单词长度不足 5 个字母！");
-            }
-        } 
-        // 2. 处理删除 (Backspace)
-        else if (lowerKey === 'backspace') {
-            if (guess.length > 0) {
-                // 从 guess 字符串移除最后一个字符
-                guess = guess.slice(0, -1);
-                
-                // 更新 UI：清空对应格子的内容
-                // currentGuessTime 是当前行数 (0-5)
-                // guess.length 是当前字符位置
-                // 例如：行0，原本长3，现在变长2，我们要清空的是 index 为 (0*5 + 2) 的那个格子
-                const currentRowStart = currentGuessTime * 5;
-                const tileIndex = currentRowStart + guess.length; 
-                
-                const tiles = document.querySelectorAll('.tile');
-                tiles[tileIndex].textContent = "";
-            }
-        } 
-        // 3. 处理字母 (a-z)
-        else if (/^[a-z]$/.test(lowerKey)) { 
-            // 如果是单个字母且当前猜测长度小于 5
-            if (guess.length < 5) {
-                const tiles = document.querySelectorAll('.tile');
-                const currentRowStart = currentGuessTime * 5;
-                const tileIndex = currentRowStart + guess.length;
-                
-                tiles[tileIndex].textContent = key.toUpperCase(); // 显示大写
-                guess += lowerKey; // 存储小写
-            }
-        }
-        // 4. 其他按键忽略，不做任何操作（也不 alert）
-    };
-
-    // === 监听物理键盘 ===
-    document.addEventListener('keydown', (event) => {
-        processInput(event.key);
-    });
-
-    // === 监听虚拟键盘点击 ===
-    // 利用事件委托，监听 keyboard 容器
-    const keyboardContainer = document.getElementById('keyboard-container');
-    if (keyboardContainer) {
-        keyboardContainer.addEventListener('click', (event) => {
-            // 查找被点击元素是否是按钮，或按钮内部
-            const target = event.target.closest('button');
-            if (target && target.hasAttribute('data-key')) {
-                const key = target.getAttribute('data-key');
-                processInput(key);
-                
-                // 移除焦点的“虚框”，提升体验
-                target.blur(); 
-            }
-        });
+    else {
+      alert("补全单词后再提交哦！");
     }
+  }
+  else if (keyBtn === "BACKSPACE") {
+    if (index > currentGuessTime * answerLength + 1) {
+      index--;
+      const cell = document.getElementById(`cell${index}`);
+      if (cell) {
+      cell.textContent = "";
+      cell.className = "cell";
+      guess = guess.slice(0, -1);
+      }
+    }
+  }
+
+ });
+});
+
+
+
+
+document.getElementById("refresh").addEventListener("click", function() {
+  initialize();
+  refresh.blur();
+});
+document.getElementById("showAnswer").addEventListener("click", function() {
+  alert(`答案是: ${answer.toLowerCase()}`);
+  showAnswer.blur();
+});
+
+
+
+
 }
-
-
 
 
 /**
@@ -222,6 +187,19 @@ async function start()
  */
 function render(letter) {
   // TODO
+  if (index > currentGuessTime * answerLength + answerLength) {
+    return;
+  }
+  if (state !== "UNFINISHED") {
+      return;
+    }
+  const currentRowStart = currentGuessTime * answerLength + 1;
+
+    const cell = document.getElementById(`cell${index}`);
+    cell.textContent = letter;
+    cell.className = "cell filled";
+    index++;
+
 }
 
 /**
@@ -233,50 +211,39 @@ function render(letter) {
  * 1. 有哪些状态或变量需要被初始化
  * 2. 初始化时 state 变量处于怎样的状态
  */
-async function initialize() {
+function initialize() {
   // TODO
-  answer = await generateRandomAnswer();
-  const tiles = document.querySelectorAll('.tile');
-  tiles.forEach(tile => {
-    tile.textContent = '';
-    tile.className = 'tile';
+  state = "UNFINISHED";
+  currentGuessTime = 0;
+  index = 1;
+  colorSequence = [];
+  wordSequence = [];
+// 清空grid
+  for (let i=1; i <= maxGuessTime*answerLength; i++) {
+    const cell = document.getElementById(`cell${i}`);
+    cell.textContent = "";
+    cell.className = "cell";//此时为original
+
+  }
+// 清空键盘
+  const keys = document.querySelectorAll(".key, .longkey");
+  keys.forEach(key => {
+    key.className = key.classList.contains("longkey") ? "longkey" : "key";//此时为original
   });
-  const keyboardContainer = document.getElementById('keyboard-container');
-  if (!keyboardContainer) return ;
 
-  keyboardContainer.innerHTML = '';
+// 生成新的答案
+  answer = "APPLE";
+  wordSequence = [answer];
+  generateRandomAnswer().then(randomWord => {
+    answer = randomWord.toUpperCase();
+  });
+  
 
-  const rows = ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'];
-  rows.forEach((rowString,rowIndex) => {
-    const rowDiv = document.createElement('div');
-    rowDiv.classList.add('keyboard-row');
+// 弹窗提示游戏开始
 
-    if (rowIndex === 2) {
-      const enterButton = document.createElement('button');
-      enterButton.textContent = 'Enter';
-      enterButton.setAttribute('data-key', 'Enter');
-      enterButton.classList.add('key-btn','wide-btn');
-      rowDiv.appendChild(enterButton);
-    }
-    const keys = rowString.split('');
-        keys.forEach(key => {
-            const btn = document.createElement('button');
-            btn.textContent = key;
-            btn.setAttribute('data-key', key);
-            btn.classList.add('key-btn'); // 样式需在 CSS 定义
-            rowDiv.appendChild(btn);
-        });
-            if (rowIndex === 2) {
-             const backspaceBtn = document.createElement('button');
-             backspaceBtn.textContent = "←";
-             backspaceBtn.setAttribute('data-key', 'Backspace');
-             backspaceBtn.classList.add('key-btn', 'wide-btn');
-             rowDiv.appendChild(backspaceBtn);
-        }
+  
 
-        keyboardContainer.appendChild(rowDiv);
-    });
-    console.log("程序已初始化，答案是：", answer);
+
 }
 
 /**
@@ -293,29 +260,31 @@ async function initialize() {
  * @return {string} answer
  */
 async function generateRandomAnswer() {
-    try {
-        const response = await fetch('words.json');
-        const data = await response.json();
-        
-       if (Array.isArray(data)) {
-            wordSequence = data;
-        } else if (data.words && Array.isArray(data.words)) {
-            wordSequence = data.words;
-        } else {
-            console.error("JSON 格式无法识别");
-            return "apple";
-        }
-        
-        // 随机抽取
-        const randomIndex = Math.floor(Math.random() * wordSequence.length);
-        const randomWord = wordSequence[randomIndex];
-        
-        return randomWord;
+  // TODO
+   try {
+      // 读取 words.json 文件
+      const response = await fetch('words.json');//使用 fetch API 发起网络请求获取 words.json 文件的内容，fetch 返回一个 Promise，使用 await 等待这个 Promise 解析完成，得到一个 Response 对象
+      
+
+      const data = await response.json();//
+
+      // 根据 words.json 的结构 {"words": [...]} 获取单词列表
+      // 统一转为大写，方便后续比较
+      wordSequence = data.words.map(w => w.toUpperCase());
+
+      // 随机抽取一个单词
+      const randomIndex = Math.floor(Math.random() * wordSequence.length);
+      const randomWord = wordSequence[randomIndex];
+
+      return randomWord;
+
     } catch (error) {
-        console.error("无法读取词库:", error);
-        return "apple"; // 发生错误时的保底词
+      console.error("无法读取词库:", error);
+      alert("词库加载失败，已启用基础模式（5位英文字母均可提交）。");
+      return "APPLE"; // 发生错误时的保底词（大写）
     }
-}
+  }
+
 
 /**
  * isValidWord()
@@ -333,7 +302,18 @@ async function generateRandomAnswer() {
  */
 function isValidWord(word) {
   // TODO
-  return wordSequence.includes(word.toLowerCase());
+  const normalizedWord = word.toUpperCase();
+  const basicFormatValid = /^[A-Z]{5}$/.test(normalizedWord);
+
+  if (!basicFormatValid) {
+    return false;
+  }
+
+  if (wordSequence.length <= 1) {
+    return true;
+  }
+
+  return wordSequence.includes(normalizedWord);
 }
 
 /**
@@ -346,87 +326,65 @@ function isValidWord(word) {
  *
  * @param {string} guess
  */
-function handleAnswer(currentGuess) {
-  // 1. 获取颜色序列 (您之前写的算法，假设返回 "bbgyy" 这种格式)
-  const colorSeq = calculateColorSequence(currentGuess, answer); 
-  
-  // 2. 准备更新 UI
-  const currentRowStart = currentGuessTime * 5;
-  const tiles = document.querySelectorAll('.tile');
-  
-  /* 
-   * 核心循环：遍历猜测的 5 个字母
-   * 每次循环都做两件事：更新网格颜色 + 更新键盘颜色
-   */
-  for (let i = 0; i < 5; i++) {
-      const tileIndex = currentRowStart + i;
-      const colorChar = colorSeq[i];
-      const letter = currentGuess[i].toLowerCase(); // 获取当前字母的小写形式
-      
-      // === A. 更新网格颜色 (Board) ===
-      // 先移除旧颜色，防止叠加
-      tiles[tileIndex].classList.remove('correct', 'present', 'absent');
-      
-      let cssClass = '';
-      if (colorChar === 'b') {
-          cssClass = 'correct'; // 绿
-      } else if (colorChar === 'y') {
-          cssClass = 'present'; // 黄
-      } else {
-          cssClass = 'absent';  // 灰
-      }
-      tiles[tileIndex].classList.add(cssClass);
-
-      // === B. 更新键盘颜色 (Keyboard) - 不调用外部函数，直接在这里写 ===
-      // 1. 找到对应的按键
-      // 注意：这里同时匹配小写和大写 data-key，兼容性更强
-      const keyBtn = document.querySelector(`button[data-key="${letter}"]`) || 
-                     document.querySelector(`button[data-key="${letter.toUpperCase()}"]`);
-      
-      if (keyBtn) {
-          // 2. 检查优先级：如果是 Green (correct)，它就是最终状态，不能被改成 Yellow 或 Grey
-          const isCorrect = keyBtn.classList.contains('correct');
-          
-          if (!isCorrect) {
-              // 3. 如果当前已经是 Yellow (present)，只有 Green 可以覆盖它，Grey 不能覆盖
-              const isPresent = keyBtn.classList.contains('present');
-              
-              if (cssClass === 'correct') {
-                  // 升级为绿色
-                  keyBtn.classList.remove('present', 'absent');
-                  keyBtn.classList.add('correct');
-              } else if (cssClass === 'present' && !isPresent) {
-                  // 变为黄色
-                  keyBtn.classList.remove('absent');
-                  keyBtn.classList.add('present');
-              } else if (cssClass === 'absent' && !isPresent) {
-                  // 变为灰色
-                  keyBtn.classList.add('absent');
-              }
-          }
-      }
+function handleAnswer(guess) {
+  // TODO
+  guess = guess.toUpperCase();
+  if (!isValidWord(guess)) {
+    alert("Invalid word!");
+    return false;
   }
 
-  // 3. 判断胜负状态与跳转下一行
-  console.log("提交了猜测：", currentGuess, " 颜色结果：", colorSeq);
+const colorSeq = calculateColorSequence(guess, answer);
 
-  if (currentGuess === answer) {
-      state = "SOLVED";
-      guess = "";
-      // 延时一点点，让渲染先完成
-      setTimeout(() => alert("恭喜你，猜对了！"), 100); 
-  } else {
-      currentGuessTime++; // 进入下一行
-      guess = "";         // 重置猜测缓存
-      
-      if (currentGuessTime >= maxGuessTime) {
-          state = "FAILED";
-          setTimeout(() => alert("很遗憾，次数用尽！答案是：" + answer), 100);
-      } else {
-          state = "UNFINISHED";
-          // 继续游戏
-      }
+
+for (let i = index - answerLength; i < index; i++) {
+  const letterIndex = i - (index - answerLength);
+  const letter = guess[letterIndex].toUpperCase();
+  const key = document.getElementById(`key${letter}`);
+  const cell = document.getElementById(`cell${i}`);
+  const shortcolor = colorSeq[letterIndex];
+  if (shortcolor === 'b') {
+    cell.className = "cell correct";
+    key.className = "key correct";
   }
+  else if (shortcolor === 'y') {
+    cell.className = "cell present";
+    if (key.className !== "key correct") {
+      key.className = "key present";
+    }
+  }
+  else {
+    cell.className = "cell absent";
+    if (key.className !== "key correct" && key.className !== "key present") {
+      key.className = "key absent";
+    }
+  }
+}
+
+
+  if (guess === answer) {
+    state = "SOLVED";
+    setTimeout(() => {
+      alert("恭喜你猜对了！");
+    }, 300);
+  }
+  else {
+    currentGuessTime++;
+    document.getElementById("leftGuessTime").textContent = `Left GuessTime: ${maxGuessTime - currentGuessTime}`;
+    if (currentGuessTime >= maxGuessTime) {
+      state = "FAILED";
+      setTimeout(() => {                                                                                                                                 
+      alert(`游戏结束，正确答案是: ${answer.toUpperCase()}`);
+      }, 300);
+    }
+    else {
+      index = currentGuessTime * answerLength + 1;
+      //alert(`Wrong guess! You have ${maxGuessTime - currentGuessTime} guesses left.`);
+
+    }
+  }
+
+  return true;
 }
 
 /**
@@ -436,92 +394,53 @@ function handleAnswer(currentGuess) {
  *
  * 例如：
  * 给定 answer = "apple", guess = "angel"
- * 
+ *
  * 那么返回结果为："bggyy"
  *
  * 请思考：
  * 1. Wordle 的颜色匹配算法是如何实现的
- * b代表正确位置的字母，g代表不在单词中的字母，y代表在单词中但位置不对的字母
  * 2. 有哪些特殊的匹配情况
- * 注意点：如果 guess 中有重复的字母，而 answer 中只有一个这样的字母，那么只有 guess 中的第一个这样的字母会被标记为 y 或 b，其他的会被标记为 g
  *
  * @param {string} guess
  * @param {string} answer
  * @return {string} colorSequence
  */
 function calculateColorSequence(guess, answer) {
-  // TODO
-  let result = ['g', 'g', 'g', 'g', 'g'];
-/*  for (let i = 0 ; i < answerLength ; i++) {
-    if (guess[i] === answer[i]) {
-      result[i] = 'b';
-      continue;
-    }
-    else for (let j = 0 ; j < answerLength ; j++) {
-      if (guess[i] === answer[j]) {
-        result[i] = 'y';
-        break;
+      let result = ['g', 'g', 'g', 'g', 'g'];
+    /*  for (let i = 0 ; i < answerLength ; i++) {
+        if (guess[i] === answer[i]) {
+          result[i] = 'b';
+          continue;
+        }
+        else for (let j = 0 ; j < answerLength ; j++) {
+          if (guess[i] === answer[j]) {
+            result[i] = 'y';
+            break;
+          }
+        }
+      }
+      */
+    let guessArr = guess.toUpperCase().split("");
+    let answerArr = answer.toUpperCase().split("");
+    for (let i = 0; i < answerLength; i++) {
+      if (guessArr[i] === answerArr[i]) {
+        result[i] = 'b';
+        answerArr[i] = '';
       }
     }
+    for (let i = 0; i < answerLength; i++) {
+      if (result[i] !== 'b') {
+
+
+        for (let j = 0; j < answerLength; j++) {
+          if (guessArr[i] === answerArr[j]) {
+            result[i] = 'y';
+            answerArr[j] = '';
+            break;
+          }
+        }
+      }
+    }
+
+    return result.join('');
   }
-  */
-  let guessArr = guess.toUpperCase().split("");
-  let answerArr = answer.toUpperCase().split("");
-  for (let i = 0 ; i < answerLength ; i++) {
-    if (guessArr[i] === answerArr[i]) {
-      result[i] = 'b';
-      answerArr[i] = '';
-    }
-  }
-  for (let i = 0 ; i < answerLength ; i++) {
-    if (result[i] !== 'b')
-    {
-
-    
-            for (let j = 0 ; j < answerLength ; j++) {
-                         if (guessArr[i] === answerArr[j]) 
-                        {
-                         result[i] = 'y';
-                         answerArr[j] = '';
-                         break;
-                         }
-            }
-    }
-}
-
-  return result.join('');
-}
-
-/*  通过https://www.codewars.com/kata/62013b174c72240016600e60/train/javascript的代码
-*   更改了颜色的表示方式，b代表绿色，g代表灰色，y代表黄色
-function resolver(guess, answer) {
-  // TODO
-  let answerLength = 5;
-  let result = ['b', 'b', 'b', 'b', 'b'];
-  let guessArr = guess.toUpperCase().split("");
-  let answerArr = answer.toUpperCase().split("");
-  for (let i = 0 ; i < answerLength ; i++) {
-    if (guessArr[i] === answerArr[i]) {
-      result[i] = 'g';
-      answerArr[i] = '';
-    }
-  }
-  for (let i = 0 ; i < answerLength ; i++) {
-    if (result[i] !== 'g')
-    {
-
-    
-            for (let j = 0 ; j < answerLength ; j++) {
-                         if (guessArr[i] === answerArr[j]) 
-                        {
-                         result[i] = 'y';
-                         answerArr[j] = '';
-                         break;
-                         }
-            }
-    }
-}
-
-  return result.join('');
-}
-*/

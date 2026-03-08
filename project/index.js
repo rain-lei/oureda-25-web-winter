@@ -230,7 +230,10 @@ function initialize() {
   keys.forEach(key => {
     key.className = key.classList.contains("longkey") ? "longkey" : "key";//此时为original
   });
-
+  // 重置剩余猜测次数显示
+  const leftGuessTimeElement = document.getElementById("leftGuessTime");
+  leftGuessTimeElement.textContent = `Left GuessTime: ${maxGuessTime - currentGuessTime}`;
+  leftGuessTimeElement.style.color = "white";
 // 生成新的答案
   answer = "APPLE";
   wordSequence = [answer];
@@ -444,3 +447,34 @@ function calculateColorSequence(guess, answer) {
 
     return result.join('');
   }
+  /*
+  function resolver(guess, answer) {
+  let answerLength = 5;
+  let result = ['b', 'b', 'b', 'b', 'b'];
+  let guessArr = guess.toUpperCase().split("");
+  let answerArr = answer.toUpperCase().split("");
+  for (let i = 0 ; i < answerLength ; i++) {
+    if (guessArr[i] === answerArr[i]) {
+      result[i] = 'g';
+      answerArr[i] = '';
+    }
+  }
+  for (let i = 0 ; i < answerLength ; i++) {
+    if (result[i] !== 'g')
+    {
+
+    
+            for (let j = 0 ; j < answerLength ; j++) {
+                         if (guessArr[i] === answerArr[j]) 
+                        {
+                         result[i] = 'y';
+                         answerArr[j] = '';
+                         break;
+                         }
+            }
+    }
+}
+
+  return result.join('');
+}
+  */
